@@ -147,6 +147,11 @@ def _save(im, fp, filename, save_all=False):
     speed = info.get("speed", 6)
     codec = info.get("codec", "auto")
     range_ = info.get("range", "full")
+    
+    color_primaries = info.get("color_primaries", 1)
+    transfer_characteristics = info.get("transfer_characteristics", 1)
+    matrix_coefficients = info.get("matrix_coefficients", 6)
+    
     tile_rows_log2 = info.get("tile_rows", 0)
     tile_cols_log2 = info.get("tile_cols", 0)
     alpha_premultiplied = bool(info.get("alpha_premultiplied", False))
@@ -190,6 +195,10 @@ def _save(im, fp, filename, save_all=False):
         speed,
         codec,
         range_,
+        qcolor,
+        color_primaries,
+        transfer_characteristics,
+        matrix_coefficients,
         tile_rows_log2,
         tile_cols_log2,
         alpha_premultiplied,

@@ -216,6 +216,11 @@ AvifEncoderNew(PyObject *self_, PyObject *args) {
 
     char *codec = "auto";
     char *range = "full";
+	
+	int depth = 8;
+	int color_primaries = AVIF_COLOR_PRIMARIES_BT709;
+	int transfer_characteristics = AVIF_TRANSFER_CHARACTERISTICS_SRGB;
+	int matrix_coefficients = AVIF_MATRIX_COEFFICIENTS_BT601;
 
     PyObject *advanced;
 
@@ -230,6 +235,10 @@ AvifEncoderNew(PyObject *self_, PyObject *args) {
             &speed,
             &codec,
             &range,
+            &depth,
+            &color_primaries,
+            &transfer_characteristics,
+            &matrix_coefficients,
             &tile_rows_log2,
             &tile_cols_log2,
             &alpha_premultiplied,
@@ -343,12 +352,12 @@ AvifEncoderNew(PyObject *self_, PyObject *args) {
         // Set these in advance so any upcoming RGB -> YUV use the proper coefficients
         image->yuvRange = enc_options.range;
         image->yuvFormat = enc_options.subsampling;
-        image->colorPrimaries = AVIF_COLOR_PRIMARIES_UNSPECIFIED;
-        image->transferCharacteristics = AVIF_TRANSFER_CHARACTERISTICS_UNSPECIFIED;
-        image->matrixCoefficients = AVIF_MATRIX_COEFFICIENTS_BT601;
+        image->colorPrimaries = color_primaries;
+        image->transferCharacteristics = transfer_characteristics;
+        image->matrixCoefficients = matrix_coefficients;
         image->width = width;
         image->height = height;
-        image->depth = 8;
+        image->depth = depth;
 #if AVIF_VERSION >= 90000
         image->alphaPremultiplied = enc_options.alpha_premultiplied;
 #endif
@@ -360,9 +369,6 @@ AvifEncoderNew(PyObject *self_, PyObject *args) {
                 image,
                 (uint8_t *)PyBytes_AS_STRING(icc_bytes),
                 PyBytes_GET_SIZE(icc_bytes));
-        } else {
-            image->colorPrimaries = AVIF_COLOR_PRIMARIES_BT709;
-            image->transferCharacteristics = AVIF_TRANSFER_CHARACTERISTICS_SRGB;
         }
 
         if (PyBytes_GET_SIZE(exif_bytes)) {
@@ -462,7 +468,7 @@ _encoder_add(AvifEncoderObject *self, PyObject *args) {
         frame->matrixCoefficients = image->matrixCoefficients;
         frame->yuvRange = image->yuvRange;
         frame->yuvFormat = image->yuvFormat;
-        frame->depth = image->depth;
+        frame->depth = self->image->depth;
 #if AVIF_VERSION >= 90000
         frame->alphaPremultiplied = image->alphaPremultiplied;
 #endif
@@ -474,7 +480,7 @@ _encoder_add(AvifEncoderObject *self, PyObject *args) {
     memset(&rgb, 0, sizeof(avifRGBImage));
 
     avifRGBImageSetDefaults(&rgb, frame);
-    rgb.depth = 8;
+    rgb.depth = self->image->depth;
 
     if (strcmp(mode, "RGBA") == 0) {
         rgb.format = AVIF_RGB_FORMAT_RGBA;

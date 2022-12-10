@@ -121,9 +121,9 @@ deps = {
         "bins": ["cjpeg.exe", "djpeg.exe"],
     },
     "zlib": {
-        "url": "http://zlib.net/zlib1211.zip",
-        "filename": "zlib1211.zip",
-        "dir": "zlib-1.2.11",
+        "url": "http://zlib.net/zlib1213.zip",
+        "filename": "zlib1213.zip",
+        "dir": "zlib-1.2.13",
         "build": [
             cmd_nmake(r"win32\Makefile.msc", "clean"),
             cmd_nmake(r"win32\Makefile.msc", "zlib.lib"),
@@ -147,9 +147,9 @@ deps = {
         "libs": [r"libpng16.lib"],
     },
     "libavif": {
-        "url": "https://github.com/AOMediaCodec/libavif/archive/v0.11.0.tar.gz",
-        "filename": "libavif-0.11.0.tar.gz",
-        "dir": "libavif-0.11.0",
+        "url": "https://github.com/AOMediaCodec/libavif/archive/v0.11.1.tar.gz",
+        "filename": "libavif-0.11.1.tar.gz",
+        "dir": "libavif-0.11.1",
         "patch": {
             "src/codec_aom.c": {
                 "if (aomCpuUsed >= 7)": "if (0)",
