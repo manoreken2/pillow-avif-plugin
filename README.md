@@ -4,7 +4,7 @@ This is a plugin that adds support for AVIF files until official support has bee
 
 To register this plugin with pillow you will need to add `import pillow_avif` somewhere in your application.
 
-## how to build on Windows
+## how to build and install on Windows
 
 - install miniforge
 - install VS2019
@@ -19,6 +19,53 @@ To register this plugin with pillow you will need to add `import pillow_avif` so
 - pip list should show pillow-avif-plugin
 
 ## encoding options
+
+## "qmin"
+
+encoding quality. integer. Quality range is 0 to 63
+
+encoder->minQuantizer
+
+| value | meanings |
+|-----:|-----------|
+|     0| AVIF_QUANTIZER_BEST_QUALITY |
+|     63| AVIF_QUANTIZER_WORST_QUALITY |
+
+## "qmax"
+
+encoding quality. integer. Quality range is 0 to 63
+
+encoder->maxQuantizer
+
+| value | meanings |
+|-----:|-----------|
+|     0| AVIF_QUANTIZER_BEST_QUALITY |
+|     63| AVIF_QUANTIZER_WORST_QUALITY |
+
+## "speed"
+
+encoding speed. slower should make for a better quality. integer.
+
+| value | meanings |
+|-----:|-----------|
+|    -1| AVIF_SPEED_DEFAULT |
+|     0| AVIF_SPEED_SLOWEST |
+|    10| AVIF_SPEED_FASTEST |
+
+## "codec"
+
+default is "auto".
+encoder availability depends on the build settings of libav1f.
+
+| value | meanings |
+|-----:|-----------|
+|   "auto" | auto |
+|   "dav1d" | dav1d |
+|   "libgav1" | libgav1 |
+|   "aom" | aom |
+|   "rav1e" | rav1e |
+|   "svt" | svt |
+
 
 ## "range"
 
@@ -49,6 +96,38 @@ encoding quality, integer number ranging 0 to 100
 |     0 | worst color encoding quality |
 |     75 | default color encoding quality |
 |     100 | best color encoding quality |
+
+## "tile_rows_log2"
+
+default is 0
+
+## "tile_cols_log2"
+
+default is 0
+
+## "alpha_premultiplied"
+
+if true, enc_options.alpha_premultiplied is AVIF_TRUE
+
+## "autotiling"
+
+if true, enc_options.autotiling is AVIF_TRUE
+
+## "icc_bytes"
+
+it is set to avifImageSetProfileICC()
+
+## "exif_bytes"
+
+is is set to avifImageSetMetadataExif()
+
+## "xmp_bytes"
+
+is is set to avifImageSetMetadataXMP
+
+## "advanced"
+
+follows pytuple. it is set to  avifEncoderSetCodecSpecificOption()
 
 ## "color_primaries"
 
