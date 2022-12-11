@@ -1,8 +1,4 @@
-# pillow-avif-plugin
-
-This is a plugin that adds support for AVIF files until official support has been added (see [this pull request](https://github.com/python-pillow/Pillow/pull/5201)).
-
-To register this plugin with pillow you will need to add `import pillow_avif` somewhere in your application.
+# pillow-avif-plugin quick hack to support HDR10 ouput
 
 ## how to build and install on Windows
 
@@ -12,11 +8,29 @@ To register this plugin with pillow you will need to add `import pillow_avif` so
 - install TortoiseGit
 - install MSYS2 and add C:\MSYS\usr\bin to PATH environment variable
 - download https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip , unzip onto C:\apps\NASM and add D:\apps\NASM to PATH environment variable.
-- on Administrator miniforge prompt, pip install pillow meson
+- on Administrator miniforge prompt, pip install meson
+- build and install quick hack pillow to support R16G16B16 https://github.com/manoreken2/Pillow/tree/main/winbuild
 - on Administrator miniforge prompt, cd to this directory, cd winbuild and python build_prepare.py
 - cd winbuild/build and build_dep_all.cmd and build_pillow_avif_plugin.cmd
 - cd to this directory and python -m pip install -e .
 - pip list should show pillow-avif-plugin
+
+## how to write HDR10PQ AVIF file
+
+```
+from PIL import Image
+from pillow_avif import AvifImagePlugin
+from pillow_avif import _avif
+import cv2
+
+imCV = cv2.imread("a.png", cv2.IMREAD_UNCHANGED)
+imCV = cv2.cvtColor(imCV, cv2.COLOR_BGR2RGB)
+
+print("imCV {0} {1}".format(imCV.dtype, imCV.shape))
+
+im = Image.fromarray(imCV, mode="R16G16B16")
+im.save("out.avif", quality=100, range="full", subsampling="4:4:4", depth=10, color_primaries=9, transfer_characteristics=16, matrix_coefficients=0)
+```
 
 ## encoding options
 

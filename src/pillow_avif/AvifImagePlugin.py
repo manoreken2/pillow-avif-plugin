@@ -17,7 +17,7 @@ except ImportError:
 DECODE_CODEC_CHOICE = "auto"
 CHROMA_UPSAMPLING = "auto"
 
-_VALID_AVIF_MODES = {"RGB", "RGBA"}
+_VALID_AVIF_MODES = {"RGB", "RGBA", "R16G16B16"}
 
 
 if sys.version_info[0] == 2:
@@ -147,6 +147,7 @@ def _save(im, fp, filename, save_all=False):
     speed = info.get("speed", 6)
     codec = info.get("codec", "auto")
     range_ = info.get("range", "full")
+    depth = info.get("depth", 8)
     
     color_primaries = info.get("color_primaries", 1)
     transfer_characteristics = info.get("transfer_characteristics", 1)
@@ -195,7 +196,7 @@ def _save(im, fp, filename, save_all=False):
         speed,
         codec,
         range_,
-        qcolor,
+        depth,
         color_primaries,
         transfer_characteristics,
         matrix_coefficients,
@@ -225,7 +226,13 @@ def _save(im, fp, filename, save_all=False):
                 # Make sure image mode is supported
                 frame = ims
                 rawmode = ims.mode
+
+                print("AvifImagePlugin.py _save rawmode={0}".format(rawmode))
+
                 if ims.mode not in _VALID_AVIF_MODES:
+                    
+                    print("AvifImagePlugin.py _save ims.mode is not valid avif mode. converting. {0}".format(ims.mode))
+
                     alpha = (
                         "A" in ims.mode
                         or "a" in ims.mode
@@ -241,6 +248,9 @@ def _save(im, fp, filename, save_all=False):
                     frame_dur = duration
 
                 # Append the frame to the animation encoder
+
+                print("AvifImagePlugin.py _save enc.add start")
+
                 enc.add(
                     frame.tobytes("raw", rawmode),
                     frame_dur,
@@ -249,6 +259,8 @@ def _save(im, fp, filename, save_all=False):
                     rawmode,
                     is_single_frame,
                 )
+
+                print("AvifImagePlugin.py _save enc.add end")
 
                 # Update frame index
                 frame_idx += 1
@@ -265,6 +277,8 @@ def _save(im, fp, filename, save_all=False):
         raise OSError("cannot write file as AVIF (encoder returned None)")
 
     fp.write(data)
+
+    print("AvifImagePlugin.py _save end.")
 
 
 Image.register_open(AvifImageFile.format, AvifImageFile, _accept)
