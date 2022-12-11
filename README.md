@@ -23,6 +23,7 @@ from pillow_avif import AvifImagePlugin
 from pillow_avif import _avif
 import cv2
 
+# read R16G16B16 png file
 imCV = cv2.imread("a.png", cv2.IMREAD_UNCHANGED)
 imCV = cv2.cvtColor(imCV, cv2.COLOR_BGR2RGB)
 
