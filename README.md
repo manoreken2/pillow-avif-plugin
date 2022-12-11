@@ -1,4 +1,4 @@
-# pillow-avif-plugin quick hack to support HDR10 ouput
+# pillow-avif-plugin quick hack to output 10bit HDR10PQ AVIF
 
 ## how to build and install on Windows
 
