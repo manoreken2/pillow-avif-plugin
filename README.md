@@ -15,7 +15,7 @@
 - cd to this directory and python -m pip install -e .
 - pip list should show pillow-avif-plugin
 
-## how to write HDR10PQ AVIF file
+## how to write HDR10PQ 10bit AVIF file
 
 ```
 from PIL import Image
