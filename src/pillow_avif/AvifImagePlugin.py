@@ -227,8 +227,6 @@ def _save(im, fp, filename, save_all=False):
                 frame = ims
                 rawmode = ims.mode
 
-                print("AvifImagePlugin.py _save rawmode={0}".format(rawmode))
-
                 if ims.mode not in _VALID_AVIF_MODES:
                     
                     print("AvifImagePlugin.py _save ims.mode is not valid avif mode. converting. {0}".format(ims.mode))
@@ -249,8 +247,6 @@ def _save(im, fp, filename, save_all=False):
 
                 # Append the frame to the animation encoder
 
-                print("AvifImagePlugin.py _save enc.add start")
-
                 enc.add(
                     frame.tobytes("raw", rawmode),
                     frame_dur,
@@ -259,8 +255,6 @@ def _save(im, fp, filename, save_all=False):
                     rawmode,
                     is_single_frame,
                 )
-
-                print("AvifImagePlugin.py _save enc.add end")
 
                 # Update frame index
                 frame_idx += 1
@@ -277,8 +271,6 @@ def _save(im, fp, filename, save_all=False):
         raise OSError("cannot write file as AVIF (encoder returned None)")
 
     fp.write(data)
-
-    print("AvifImagePlugin.py _save end.")
 
 
 Image.register_open(AvifImageFile.format, AvifImageFile, _accept)

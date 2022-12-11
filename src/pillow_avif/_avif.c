@@ -202,8 +202,6 @@ AvifEncoderNew(PyObject *self_, PyObject *args) {
     AvifEncoderObject *self = NULL;
     avifEncoder *encoder = NULL;
 
-    printf("%s:%d AvifEncoderNew\n", __FILE__, __LINE__);
-
     char *subsampling = "4:2:0";
     int qmin = AVIF_QUANTIZER_BEST_QUALITY;  // =0
     int qmax = 10;                           // "High Quality", but not lossless
@@ -348,24 +346,6 @@ AvifEncoderNew(PyObject *self_, PyObject *args) {
         _add_codec_specific_options(encoder, advanced);
 #endif
 
-        printf(
-            " maxT=%d qmin=%d qmax=%d codec=%d speed=%d yuvRange=%d subsampling=%d "
-            "color_primaries=%d transferCharacteristics=%d matrix_coefficients=%d "
-            "width=%d height=%d depth=%d\n",
-            max_threads,
-            enc_options.qmin,
-            enc_options.qmax,
-            (int)enc_options.codec,
-            enc_options.speed,
-            (int)enc_options.range,
-            (int)enc_options.subsampling,
-            color_primaries,
-            transfer_characteristics,
-            matrix_coefficients,
-            width,
-            height,
-            depth);
-
         self->encoder = encoder;
 
         avifImage *image = avifImageCreateEmpty();
@@ -451,8 +431,6 @@ _encoder_add(AvifEncoderObject *self, PyObject *args) {
     avifImage *image = self->image;
     avifImage *frame = NULL;
 
-    printf("%s:%d _encoder_add\n", __FILE__, __LINE__);
-
     if (!PyArg_ParseTuple(
             args,
             "z#IIIsO",
@@ -505,18 +483,17 @@ _encoder_add(AvifEncoderObject *self, PyObject *args) {
     rgb.depth = self->image->depth;
 
     if (strcmp(mode, "RGBA") == 0) {
-        printf("%s:%d mode=%s\n", __FILE__, __LINE__, mode);
         rgb.format = AVIF_RGB_FORMAT_RGBA;
         channels = 4;
+    } else if (strcmp(mode, "R16G16B16") == 0) {
+        rgb.format = AVIF_RGB_FORMAT_RGB;
+        channels = 3;
     } else {
-        printf("%s:%d mode=%s\n", __FILE__, __LINE__, mode);
         rgb.format = AVIF_RGB_FORMAT_RGB;
         channels = 3;
     }
 
     avifRGBImageAllocatePixels(&rgb);
-
-    printf(" rgb.rowBytes=%u rgb.height=%u size=%d\n", rgb.rowBytes, rgb.height, (int)size);
 
     if (rgb.rowBytes * rgb.height != size) {
         printf("%s:%d\n", __FILE__, __LINE__);
@@ -575,7 +552,6 @@ _encoder_add(AvifEncoderObject *self, PyObject *args) {
 
     uint32_t addImageFlags = AVIF_ADD_IMAGE_FLAG_NONE;
     if (PyObject_IsTrue(is_single_frame)) {
-        printf("%s:%d\n", __FILE__, __LINE__);
         addImageFlags |= AVIF_ADD_IMAGE_FLAG_SINGLE;
     }
 
@@ -594,7 +570,6 @@ _encoder_add(AvifEncoderObject *self, PyObject *args) {
     }
 
 end:
-    printf("%s:%d\n", __FILE__, __LINE__);
     avifRGBImageFreePixels(&rgb);
     if (!is_first_frame) {
         printf("%s:%d\n", __FILE__, __LINE__);
@@ -602,7 +577,6 @@ end:
     }
 
     if (ret == Py_None) {
-        printf("%s:%d _encoder_add success. frame_index=%d\n", __FILE__, __LINE__, self->frame_index);
         self->frame_index++;
         Py_RETURN_NONE;
     } else {
@@ -614,8 +588,6 @@ end:
 PyObject *
 _encoder_finish(AvifEncoderObject *self) {
     avifEncoder *encoder = self->encoder;
-
-    printf("%s:%d _encoder_finish\n", __FILE__, __LINE__);
 
     avifRWData raw = AVIF_DATA_EMPTY;
     avifResult result;
