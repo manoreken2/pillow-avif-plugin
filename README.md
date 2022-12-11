@@ -9,7 +9,7 @@
 - install MSYS2 and add C:\MSYS\usr\bin to PATH environment variable
 - download https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/win64/nasm-2.15.05-win64.zip , unzip onto C:\apps\NASM and add D:\apps\NASM to PATH environment variable.
 - on Administrator miniforge prompt, pip install meson
-- build and install quick hack pillow to support R16G16B16 https://github.com/manoreken2/Pillow/tree/main/winbuild
+- build and install quick hack pillow to support R16G16B16 https://github.com/manoreken2/Pillow-R16G16B16/tree/main/winbuild
 - on Administrator miniforge prompt, cd to this directory, cd winbuild and python build_prepare.py
 - cd winbuild/build and build_dep_all.cmd and build_pillow_avif_plugin.cmd
 - cd to this directory and python -m pip install -e .
