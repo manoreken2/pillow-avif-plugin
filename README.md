@@ -14,6 +14,7 @@
 - cd winbuild/build and build_dep_all.cmd and build_pillow_avif_plugin.cmd
 - cd to this directory and python -m pip install -e .
 - pip list should show pillow-avif-plugin
+- to create whl, build\build_pillow_avif_plugin.cmd bdist_wheel
 
 ## how to write HDR10PQ 10bit AVIF file
 
